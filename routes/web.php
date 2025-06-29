@@ -7,6 +7,7 @@ use App\Http\Controllers\PabrikanController; // Import
 use App\Http\Controllers\PembobotanController; // Import
 use App\Http\Controllers\PenilaianController; // Import
 use App\Http\Controllers\SpkController; // Kita akan buat controller ini
+use App\Http\Controllers\LandingPageController; // Pastikan ini ada di bagian atas file
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,16 @@ use App\Http\Controllers\SpkController; // Kita akan buat controller ini
 |
 */
 
-Route::get('/', function () {
-    return view('welcome'); // Atau landing.blade.php jika Anda punya halaman landing
+
+
+Route::get('/', [LandingPageController::class, 'index'])->name('landing');
+
+// Pastikan ini juga ada jika Anda masih ingin mengizinkan akses ke dashboard setelah login
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    // ... rute-rute lain di sini ...
 });
 
 Route::get('/dashboard', function () {
