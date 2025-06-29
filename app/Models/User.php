@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens; // Pastikan ini ada jika Anda menginstal Sanctum
 
-class User extends Authenticatable
+class User extends Authenticatable // implements MustVerifyEmail // Hapus "implements MustVerifyEmail" jika tidak memerlukannya
 {
-    use HasFactory, Notifiable;
-
-    protected $table = 'user'; // Specify the table name
-    protected $primaryKey = 'id_user'; // Specify the primary key
+    use HasApiTokens, HasFactory, Notifiable; // Hapus HasApiTokens jika tidak menginstal Sanctum
 
     /**
      * The attributes that are mass assignable.
@@ -20,9 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'nama',
-        'no_kontak',
-        'alamat',
+        'name',
         'email',
         'password',
     ];
@@ -47,13 +43,17 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function pembobotans()
+    // --- Relasi ke Pembobotan ---
+    // Satu user memiliki satu set pembobotan
+    public function pembobotan()
     {
-        return $this->hasMany(Pembobotan::class, 'id_user', 'id_user');
+        return $this->hasOne(Pembobotan::class);
     }
 
+    // --- Relasi ke Penilaian ---
+    // Satu user bisa memiliki banyak penilaian
     public function penilaians()
     {
-        return $this->hasMany(Penilaian::class, 'id_user', 'id_user');
+        return $this->hasMany(Penilaian::class);
     }
 }

@@ -9,11 +9,8 @@ class Pembobotan extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembobotan';
-    protected $primaryKey = 'id_pembobotan';
-
     protected $fillable = [
-        'id_user',
+        'user_id',
         'w1',
         'w2',
         'w3',
@@ -21,8 +18,10 @@ class Pembobotan extends Model
         'w5',
     ];
 
+    // --- Relasi ke User ---
+    // Satu set pembobotan dimiliki oleh satu user
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class);
     }
 }

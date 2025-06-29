@@ -6,26 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('mobil', function (Blueprint $table) {
-            $table->id('id_mobil'); // Primary Key
-            $table->unsignedBigInteger('id_pabrikan'); // Foreign Key to pabrikan
-            $table->string('nama_mobil');
-            $table->timestamps();
-
-            $table->foreign('id_pabrikan')->references('id_pabrikan')->on('pabrikan')->onDelete('cascade');
+        Schema::table('mobils', function (Blueprint $table) {
+            $table->foreignId('pabrikan_id')->nullable()->constrained()->onDelete('set null'); // Atau onDelete('cascade')
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('mobil');
+        Schema::table('mobils', function (Blueprint $table) {
+            $table->dropForeign(['pabrikan_id']);
+            $table->dropColumn('pabrikan_id');
+        });
     }
 };

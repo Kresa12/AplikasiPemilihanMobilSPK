@@ -11,19 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('penilaian', function (Blueprint $table) {
-            $table->id('id_penilaian'); // Primary Key
-            $table->unsignedBigInteger('id_mobil'); // Foreign Key to mobil
-            $table->unsignedBigInteger('id_user'); // Foreign Key to user
-            $table->decimal('harga_beli', 10, 2); // Adjust precision/scale as needed for currency
-            $table->string('fitur');
-            $table->string('model');
-            $table->decimal('harga_jual', 10, 2);
-            $table->date('tanggal_penilaian');
+        Schema::create('penilaians', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key ke tabel users
+            $table->foreignId('mobil_id')->constrained()->onDelete('cascade'); // Foreign key ke tabel mobils
+
+            // Kriteria penilaian
+            $table->double('harga_beli'); // Cost
+            $table->double('fitur');      // Benefit
+            $table->double('model');      // Benefit
+            $table->double('harga_jual'); // Benefit
+
+            $table->date('tanggal_penilaian')->nullable(); // Tanggal penilaian (opsional, bisa diambil dari created_at)
             $table->timestamps();
 
-            $table->foreign('id_mobil')->references('id_mobil')->on('mobil')->onDelete('cascade');
-            $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
+            // Memastikan kombinasi user dan mobil itu unik (satu user hanya bisa menilai satu mobil sekali)
+            $table->unique(['user_id', 'mobil_id']);
         });
     }
 
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penilaian');
+        Schema::dropIfExists('penilaians');
     }
 };

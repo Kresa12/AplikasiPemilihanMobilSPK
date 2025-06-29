@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pabrikan', function (Blueprint $table) {
-            $table->id('id_pabrikan'); // Primary Key
-            $table->string('merk_pabrikan');
-            $table->integer('nilai'); // Assuming 'nilai' is an integer
+        Schema::create('pabrikans', function (Blueprint $table) {
+            $table->id();
+            $table->string('merk_pabrikan')->unique(); // Nama merk pabrikan
+            $table->integer('nilai'); // Nilai tetap untuk pabrikan (Benefit)
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pabrikan');
+        Schema::dropIfExists('pabrikans');
     }
 };

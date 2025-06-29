@@ -13,7 +13,7 @@ class PabrikanController extends Controller
     public function index()
     {
         $pabrikans = Pabrikan::all();
-        return view('pabrikan.index', compact('pabrikans'));
+        return view('pabrikans.index', compact('pabrikans'));
     }
 
     /**
@@ -21,7 +21,7 @@ class PabrikanController extends Controller
      */
     public function create()
     {
-        return view('pabrikan.create');
+        return view('pabrikans.create');
     }
 
     /**
@@ -30,21 +30,13 @@ class PabrikanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'merk_pabrikan' => 'required|string|max:255',
-            'nilai' => 'required|integer',
+            'merk_pabrikan' => 'required|string|max:255|unique:pabrikans',
+            'nilai' => 'required|integer|min:1|max:5', // Batasan nilai 1-5 sesuai contoh Anda
         ]);
 
         Pabrikan::create($request->all());
 
-        return redirect()->route('pabrikan.index')->with('success', 'Pabrikan created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pabrikan $pabrikan)
-    {
-        return view('pabrikan.show', compact('pabrikan'));
+        return redirect()->route('pabrikans.index')->with('success', 'Pabrikan berhasil ditambahkan.');
     }
 
     /**
@@ -52,7 +44,7 @@ class PabrikanController extends Controller
      */
     public function edit(Pabrikan $pabrikan)
     {
-        return view('pabrikan.edit', compact('pabrikan'));
+        return view('pabrikans.edit', compact('pabrikan'));
     }
 
     /**
@@ -61,13 +53,13 @@ class PabrikanController extends Controller
     public function update(Request $request, Pabrikan $pabrikan)
     {
         $request->validate([
-            'merk_pabrikan' => 'required|string|max:255',
-            'nilai' => 'required|integer',
+            'merk_pabrikan' => 'required|string|max:255|unique:pabrikans,merk_pabrikan,' . $pabrikan->id,
+            'nilai' => 'required|integer|min:1|max:5',
         ]);
 
         $pabrikan->update($request->all());
 
-        return redirect()->route('pabrikan.index')->with('success', 'Pabrikan updated successfully.');
+        return redirect()->route('pabrikans.index')->with('success', 'Pabrikan berhasil diperbarui.');
     }
 
     /**
@@ -76,7 +68,6 @@ class PabrikanController extends Controller
     public function destroy(Pabrikan $pabrikan)
     {
         $pabrikan->delete();
-
-        return redirect()->route('pabrikan.index')->with('success', 'Pabrikan deleted successfully.');
+        return redirect()->route('pabrikans.index')->with('success', 'Pabrikan berhasil dihapus.');
     }
 }

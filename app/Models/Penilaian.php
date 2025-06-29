@@ -9,12 +9,9 @@ class Penilaian extends Model
 {
     use HasFactory;
 
-    protected $table = 'penilaian';
-    protected $primaryKey = 'id_penilaian';
-
     protected $fillable = [
-        'id_mobil',
-        'id_user',
+        'user_id',
+        'mobil_id',
         'harga_beli',
         'fitur',
         'model',
@@ -22,17 +19,17 @@ class Penilaian extends Model
         'tanggal_penilaian',
     ];
 
-    protected $casts = [
-        'tanggal_penilaian' => 'date',
-    ];
-
-    public function mobil()
-    {
-        return $this->belongsTo(Mobil::class, 'id_mobil', 'id_mobil');
-    }
-
+    // --- Relasi ke User ---
+    // Satu penilaian dilakukan oleh satu user
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class);
+    }
+
+    // --- Relasi ke Mobil ---
+    // Satu penilaian untuk satu mobil
+    public function mobil()
+    {
+        return $this->belongsTo(Mobil::class);
     }
 }

@@ -9,16 +9,13 @@ class Pabrikan extends Model
 {
     use HasFactory;
 
-    protected $table = 'pabrikan'; // Specify the table name if it's not the plural form of the model name
-    protected $primaryKey = 'id_pabrikan'; // Specify the primary key if it's not 'id'
+    // Tidak perlu menambahkan protected $table = 'pabrikan';
+    // Laravel secara otomatis akan menggunakan 'pabrikans'
 
     protected $fillable = [
         'merk_pabrikan',
         'nilai',
     ];
 
-    public function mobils()
-    {
-        return $this->hasMany(Mobil::class, 'id_pabrikan', 'id_pabrikan');
-    }
+    // Jika nanti ada relasi, tambahkan di sini
 }

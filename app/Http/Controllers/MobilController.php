@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mobil;
 use Illuminate\Http\Request;
 
 class MobilController extends Controller
@@ -11,7 +12,8 @@ class MobilController extends Controller
      */
     public function index()
     {
-        //
+        $mobils = Mobil::all();
+        return view('mobils.index', compact('mobils'));
     }
 
     /**
@@ -19,7 +21,7 @@ class MobilController extends Controller
      */
     public function create()
     {
-        //
+        return view('mobils.create');
     }
 
     /**
@@ -27,38 +29,52 @@ class MobilController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_mobil' => 'required|string|max:255|unique:mobils',
+        ]);
+
+        Mobil::create($request->all());
+
+        return redirect()->route('mobils.index')->with('success', 'Mobil berhasil ditambahkan.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Mobil $mobil)
     {
-        //
+        // Anda bisa menampilkan detail mobil dan daftar penilaian di sini
+        return view('mobils.show', compact('mobil'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Mobil $mobil)
     {
-        //
+        return view('mobils.edit', compact('mobil'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Mobil $mobil)
     {
-        //
+        $request->validate([
+            'nama_mobil' => 'required|string|max:255|unique:mobils,nama_mobil,' . $mobil->id,
+        ]);
+
+        $mobil->update($request->all());
+
+        return redirect()->route('mobils.index')->with('success', 'Mobil berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Mobil $mobil)
     {
-        //
+        $mobil->delete();
+        return redirect()->route('mobils.index')->with('success', 'Mobil berhasil dihapus.');
     }
 }

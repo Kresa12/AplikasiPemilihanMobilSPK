@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pembobotan', function (Blueprint $table) {
-            $table->id('id_pembobotan'); // Primary Key
-            $table->unsignedBigInteger('id_user'); // Foreign Key to user
-            $table->decimal('w1', 5, 2)->nullable(); // Adjust precision/scale as needed for weights
-            $table->decimal('w2', 5, 2)->nullable();
-            $table->decimal('w3', 5, 2)->nullable();
-            $table->decimal('w4', 5, 2)->nullable();
-            $table->decimal('w5', 5, 2)->nullable();
-            $table->timestamps();
+        Schema::create('pembobotans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade'); // Foreign key ke tabel users, unique karena 1 user 1 set bobot
 
-            $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
+            // Bobot kriteria
+            $table->double('w1')->default(0.2); // Bobot untuk harga_beli
+            $table->double('w2')->default(0.2); // Bobot untuk fitur
+            $table->double('w3')->default(0.2); // Bobot untuk model
+            $table->double('w4')->default(0.2); // Bobot untuk harga_jual
+            $table->double('w5')->default(0.2); // Bobot untuk nilai_pabrikan
+
+            $table->timestamps();
         });
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pembobotan');
+        Schema::dropIfExists('pembobotans');
     }
 };
